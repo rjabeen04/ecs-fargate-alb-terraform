@@ -29,3 +29,12 @@ flowchart TB
   nat --> igw
   igw --> internet[(Internet)]
 
+ecs-fargate-alb-terraform/
+├── bootstrap/                 # S3 + DynamoDB for remote state locking
+├── modules/
+│   ├── network/               # VPC, subnets, IGW, NAT, routes
+│   ├── alb/                   # ALB, listener, target group, WAF association
+│   └── ecs/                   # ECS cluster, task definition, service, logs, IAM role
+└── envs/
+    └── dev/                   # Environment configuration (dev)
+
