@@ -1,8 +1,6 @@
 # ECS Fargate + ALB + WAF (Terraform)
 
-This repository contains a **production-style Terraform project** that deploys a secure, scalable AWS architecture using **ECS Fargate**, **Application Load Balancer**, and **AWS WAF**, with **remote state management**.
-
-The project is designed to demonstrate **real-world DevOps and Terraform best practices** such as modular design, environment separation, and cost-aware infrastructure lifecycle management.
+This repository contains a **production-style Terraform project** that deploys a secure, scalable AWS architecture using **ECS Fargate**, **Application Load Balancer (ALB)**, and **AWS WAF**, with **remote state** in **S3 + DynamoDB locking**.
 
 ---
 
@@ -10,26 +8,25 @@ The project is designed to demonstrate **real-world DevOps and Terraform best pr
 
 ```mermaid
 flowchart TB
-  user[User / Browser] -->|HTTP :80| alb[Application Load Balancer]
+  user[User / Browser] -->|HTTP :80| alb[ALB]
   waf[AWS WAFv2] -. protects .-> alb
 
-  subgraph VPC[VPC]
-    subgraph PublicSubnets[Public Subnets (2 AZs)]
+  subgraph vpc[VPC]
+    subgraph pub[Public Subnets]
       alb
       nat[NAT Gateway]
       igw[Internet Gateway]
     end
 
-    subgraph PrivateSubnets[Private Subnets (2 AZs)]
-      ecs[ECS Fargate Tasks (nginx)]
+    subgraph priv[Private Subnets]
+      ecs[ECS Fargate Tasks\n(nginx)]
     end
   end
 
-  alb --> tg[Target Group (IP mode)]
+  alb --> tg[Target Group\n(target_type = ip)]
   tg --> ecs
 
-  ecs -->|Outbound access| nat
+  ecs -->|Outbound| nat
   nat --> igw
   igw --> internet[(Internet)]
-
 
