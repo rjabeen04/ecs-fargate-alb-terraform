@@ -22,7 +22,7 @@ flowchart TB
       ecs[ECS Fargate Tasks\n(nginx)]
     end
   end
-
+```
   alb --> tg[Target Group\n(target_type = ip)]
   tg --> ecs
 
