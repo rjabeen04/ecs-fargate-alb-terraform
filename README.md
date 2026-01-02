@@ -13,7 +13,6 @@ flowchart TB
 
   subgraph vpc[VPC]
     subgraph pub[Public Subnets]
-      alb
       nat[NAT Gateway]
       igw[Internet Gateway]
     end
@@ -29,5 +28,4 @@ flowchart TB
   ecs -->|Outbound| nat
   nat --> igw
   igw --> internet[(Internet)]
-```
 
