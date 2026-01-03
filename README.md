@@ -4,7 +4,7 @@ This repository demonstrates a **production-style AWS infrastructure** built usi
 
 The project provisions a **containerized application running on ECS Fargate**, exposed through an **Application Load Balancer (ALB)**, protected by **AWS WAF**, with **remote Terraform state**, **ALB access logging to S3**, and **cost-control lifecycle policies**.
 
-This repo is designed for **learning, practice, and interview readiness**.
+This repository demonstrates a production-style AWS infrastructure built with Terraform, following real-world DevOps best practices.
 
 ---
 
