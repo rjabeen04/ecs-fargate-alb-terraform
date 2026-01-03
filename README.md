@@ -1,40 +1,47 @@
 # ECS Fargate + ALB + WAF (Terraform)
 
-This repository contains a **production-style Terraform project** that deploys a secure, scalable AWS architecture using **ECS Fargate**, **Application Load Balancer (ALB)**, and **AWS WAF**, with **remote state** in **S3 + DynamoDB locking**.
+This repository demonstrates a **production-style AWS infrastructure** built using **Terraform**, following real-world DevOps best practices.
+
+The project provisions a **containerized application running on ECS Fargate**, exposed through an **Application Load Balancer (ALB)**, protected by **AWS WAF**, with **remote Terraform state**, **ALB access logging to S3**, and **cost-control lifecycle policies**.
+
+This repo is designed for **learning, practice, and interview readiness**.
 
 ---
 
 ## Architecture Overview
 
-```mermaid
-flowchart TB
-  user[User / Browser] -->|HTTP :80| alb[ALB]
-  waf[AWS WAFv2] -. protects .-> alb
+High-level flow:
 
-  subgraph vpc[VPC]
-    subgraph pub[Public Subnets]
-      nat[NAT Gateway]
-      igw[Internet Gateway]
-    end
+User  
+→ Application Load Balancer (Public Subnets)  
+→ ECS Fargate Tasks (Private Subnets)  
+→ NGINX container  
 
-    subgraph priv[Private Subnets]
-      ecs[ECS Fargate Tasks\n(nginx)]
-    end
-  end
+Security & Operations:
+- AWS WAF attached to ALB
+- ALB access logs stored in S3
+- S3 lifecycle rule for log expiration
+- Terraform remote state with locking
 
-  alb --> tg[Target Group\n(target_type = ip)]
-  tg --> ecs
+---
 
-  ecs -->|Outbound| nat
-  nat --> igw
-  igw --> internet[(Internet)]
+## Repository Structure
 
+```text
 ecs-fargate-alb-terraform/
-├── bootstrap/                 # S3 + DynamoDB for remote state locking
-├── modules/
-│   ├── network/               # VPC, subnets, IGW, NAT, routes
-│   ├── alb/                   # ALB, listener, target group, WAF association
-│   └── ecs/                   # ECS cluster, task definition, service, logs, IAM role
-└── envs/
-    └── dev/                   # Environment configuration (dev)
+├── bootstrap/          # One-time setup for Terraform remote state
+│   ├── S3 bucket (tfstate)
+│   └── DynamoDB table (state locking)
+│
+├── modules/            # Reusable Terraform modules
+│   ├── network/        # VPC, subnets, IGW, NAT Gateway, routes
+│   ├── alb/            # ALB, listeners, target group, WAF
+│   └── ecs/            # ECS cluster, task definition, service
+│
+├── envs/
+│   ├── dev/            # Development environment
+│   └── prod/           # Production-style environment
+│
+├── .gitignore
+└── README.md
 
