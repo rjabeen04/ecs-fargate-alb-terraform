@@ -40,6 +40,16 @@ resource "aws_lb" "this" {
   tags = {
     Name = "${var.name}-alb"
   }
+
+  dynamic "access_logs" {
+    for_each = var.enable_access_logs ? [1] : []
+    content {
+      bucket  = var.access_logs_bucket
+      prefix  = var.access_logs_prefix
+      enabled = true
+    }
+  }
+
 }
 
 ########################
