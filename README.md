@@ -23,7 +23,7 @@ Security & Operations:
 - S3 lifecycle rule for log expiration
 - Terraform remote state with locking
 
----
+---     
 
 ## Repository Structure
 
